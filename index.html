@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PilotChantier — L'IA qui gère votre administratif de chantier</title>
+<meta name="description" content="Relances devis automatiques, suivi chantier, avis Google, impayés. L'IA travaille pour vous 24/7. Essai gratuit 30 jours.">
+<style>
+  :root{--bg:#0a0a0f;--s1:#12121a;--s2:#1a1a28;--orange:#ff9e2c;--red:#ff6b6b;--green:#00e676;--cyan:#00f0ff;--text:#e8e8f0;--muted:#8888aa;--border:#2a2a3a}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',system-ui,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+  a{color:var(--cyan);text-decoration:none}
+  .container{max-width:640px;margin:0 auto;padding:0 20px}
+  html{scroll-behavior:smooth}
+
+  /* NAV */
+  nav{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);max-width:640px;margin:0 auto}
+  .logo{font-size:16px;font-weight:800;background:linear-gradient(135deg,var(--orange),var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .nav-btn{background:rgba(255,158,44,0.12);color:var(--orange);font-size:11px;font-weight:700;padding:6px 14px;border-radius:8px;border:1px solid rgba(255,158,44,0.25);cursor:pointer}
+
+  /* HERO */
+  .hero{text-align:center;padding:56px 20px 32px;max-width:640px;margin:0 auto}
+  .hero-badge{display:inline-block;background:rgba(255,158,44,0.1);color:var(--orange);font-size:10px;font-weight:700;letter-spacing:2px;padding:5px 14px;border-radius:20px;text-transform:uppercase;margin-bottom:20px}
+  .hero h1{font-size:clamp(26px,6vw,40px);font-weight:800;line-height:1.15;margin-bottom:16px}
+  .hero h1 span{background:linear-gradient(135deg,var(--orange),var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{color:var(--muted);font-size:15px;line-height:1.6;max-width:480px;margin:0 auto 24px}
+  .hero-checks{display:inline-flex;gap:12px;font-size:11px;color:#666;flex-wrap:wrap;justify-content:center}
+
+  /* SECTION */
+  .section{padding:48px 20px;max-width:640px;margin:0 auto}
+  .section-badge{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;text-align:center}
+  .section h2{font-size:22px;font-weight:800;text-align:center;margin-bottom:6px}
+  .section .sub{color:var(--muted);font-size:13px;text-align:center;margin-bottom:20px}
+
+  /* PAIN CARDS */
+  .pain-card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:18px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:start}
+  .pain-card .icon{font-size:24px;flex-shrink:0;margin-top:2px}
+  .pain-card h3{font-size:14px;font-weight:700;margin-bottom:4px}
+  .pain-card p{font-size:12px;color:var(--muted);line-height:1.5}
+
+  /* FEATURE CARDS */
+  .feature-card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:18px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:start;position:relative;overflow:hidden}
+  .feature-card .icon{font-size:28px;flex-shrink:0}
+  .feature-card h3{font-size:14px;font-weight:700;margin-bottom:4px}
+  .feature-card p{font-size:12px;color:var(--muted);line-height:1.5}
+  .auto-badge{position:absolute;top:8px;right:8px;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:rgba(0,230,118,0.15);color:var(--green);padding:3px 8px;border-radius:6px}
+
+  /* STEPS */
+  .step{display:flex;gap:14px;margin-bottom:20px;align-items:start}
+  .step-num{width:36px;height:36px;min-width:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:var(--bg)}
+  .step h3{font-size:15px;font-weight:700;margin-bottom:2px}
+  .step p{font-size:13px;color:var(--muted);line-height:1.5}
+
+  /* TESTIMONIALS */
+  .testimonial{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px}
+  .testimonial .quote{font-size:13px;color:#ccccdd;font-style:italic;line-height:1.6;margin-bottom:10px}
+  .testimonial .author{display:flex;align-items:center;gap:8px}
+  .testimonial .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--red));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--bg)}
+  .testimonial .name{font-size:12px;font-weight:700}
+  .testimonial .role{font-size:10px;color:#666}
+
+  /* PRICING */
+  .pricing-box{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center}
+  .pricing-box .amount{font-size:36px;font-weight:800}
+  .pricing-box .period{font-size:16px;color:var(--muted);font-weight:400}
+  .pricing-box .old-price{font-size:13px;color:var(--muted);margin-top:6px;margin-bottom:16px}
+  .pricing-box .feature-list{display:flex;flex-direction:column;gap:6px;text-align:left;max-width:320px;margin:0 auto}
+  .pricing-box .feature-item{font-size:13px;display:flex;align-items:center;gap:8px}
+  .pricing-box .check{color:var(--green)}
+
+  /* CTA */
+  .cta-box{background:linear-gradient(135deg,rgba(255,158,44,0.1),rgba(255,107,107,0.08));border:1px solid rgba(255,158,44,0.25);border-radius:20px;padding:32px 24px;text-align:center}
+  .cta-box h2{font-size:22px;font-weight:800;margin-bottom:6px}
+  .cta-box .sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+  .cta-counter{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:8px}
+  .cta-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);font-size:14px;margin-bottom:10px;outline:none}
+  .cta-input:focus{border-color:var(--orange)}
+  .cta-select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--muted);font-size:14px;margin-bottom:12px;outline:none;-webkit-appearance:none;appearance:none}
+  .cta-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--orange),var(--red));color:var(--bg);border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;transition:opacity 0.3s}
+  .cta-btn:hover{opacity:0.9}
+  .cta-note{margin-top:10px;font-size:11px;color:#555}
+
+  /* SUCCESS */
+  .success-box{display:none;text-align:center;padding:40px 20px}
+  .success-box.show{display:block}
+  .success-box .big{font-size:64px;margin-bottom:16px}
+  .success-box h2{font-size:26px;font-weight:800;margin-bottom:8px}
+  .success-box p{color:var(--muted);font-size:14px;max-width:420px;margin:0 auto;line-height:1.6}
+
+  /* FOOTER */
+  footer{text-align:center;padding:24px 20px;border-top:1px solid var(--border);font-size:11px;color:#444;max-width:640px;margin:0 auto}
+
+  @media(max-width:480px){
+    .hero-checks{flex-direction:column;align-items:center;gap:6px}
+    nav{padding:12px 16px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🏗️ PilotChantier</div>
+  <a href="#cta" class="nav-btn">Accès anticipé →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🚀 Bientôt disponible — Liste d'attente ouverte</div>
+  <h1>Arrêtez de perdre des chantiers<br><span>à cause de l'administratif.</span></h1>
+  <p>PilotChantier relance vos devis, suit vos chantiers, récupère vos avis Google et gère vos impayés. <strong>Automatiquement. 24h/24.</strong></p>
+  <div class="hero-checks">
+    <span>✅ Sans engagement</span>
+    <span>✅ 30 jours gratuits</span>
+    <span>✅ Zéro compétence technique</span>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="section">
+  <div class="section-badge" style="color:#ff4444">Le problème</div>
+  <h2>Vous perdez 6 à 8h par semaine en admin.</h2>
+  <p class="sub">Et pendant ce temps-là, vous ne facturez pas.</p>
+
+  <div class="pain-card">
+    <span class="icon">😤</span>
+    <div>
+      <h3>Vos devis restent sans réponse</h3>
+      <p>Vous envoyez un devis et... rien. Vous oubliez de relancer. Le client signe chez un concurrent. Des milliers d'euros perdus chaque mois.</p>
+    </div>
+  </div>
+  <div class="pain-card">
+    <span class="icon">😶</span>
+    <div>
+      <h3>Vos clients n'ont aucune nouvelle</h3>
+      <p>Le client ne sait pas où en sont ses travaux. Il s'inquiète, vous appelle 5 fois par jour, et finit mécontent.</p>
+    </div>
+  </div>
+  <div class="pain-card">
+    <span class="icon">⭐</span>
+    <div>
+      <h3>Zéro avis Google</h3>
+      <p>Vos clients satisfaits ne pensent jamais à laisser un avis. Votre fiche Google est vide pendant que vos concurrents brillent.</p>
+    </div>
+  </div>
+  <div class="pain-card">
+    <span class="icon">💸</span>
+    <div>
+      <h3>Des factures jamais payées</h3>
+      <p>Relancer un impayé c'est gênant et chronophage. Alors vous attendez. Et les factures s'empilent.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="section">
+  <div class="section-badge" style="color:var(--green)">La solution</div>
+  <h2>PilotChantier fait tout ça pour vous.</h2>
+  <p class="sub">L'IA gère votre administratif pendant que vous êtes sur le chantier.</p>
+
+  <div class="feature-card">
+    <span class="auto-badge">100% AUTO</span>
+    <span class="icon">📨</span>
+    <div>
+      <h3>Relances devis automatiques</h3>
+      <p>À J+3, J+7, J+14 — le bon message, au bon moment, par SMS ou WhatsApp. Vous signez 30% de devis en plus.</p>
+    </div>
+  </div>
+  <div class="feature-card">
+    <span class="auto-badge">100% AUTO</span>
+    <span class="icon">🏗️</span>
+    <div>
+      <h3>Suivi chantier client</h3>
+      <p>Vos clients reçoivent un message chaque semaine avec l'avancement. Zéro appel inutile. Ils se sentent en confiance.</p>
+    </div>
+  </div>
+  <div class="feature-card">
+    <span class="auto-badge">100% AUTO</span>
+    <span class="icon">⭐</span>
+    <div>
+      <h3>Collecte d'avis Google</h3>
+      <p>3 jours après la fin du chantier, le client reçoit un SMS avec votre lien Google. 5x plus d'avis automatiquement.</p>
+    </div>
+  </div>
+  <div class="feature-card">
+    <span class="auto-badge">100% AUTO</span>
+    <span class="icon">💰</span>
+    <div>
+      <h3>Relances factures impayées</h3>
+      <p>Rappel amical → relance ferme → mise en demeure. Graduel, professionnel, automatique. Vous récupérez votre argent.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="section-badge" style="color:var(--cyan)">Comment ça marche</div>
+  <h2>3 étapes. 5 minutes. C'est tout.</h2>
+  <div style="margin-top:24px">
+    <div class="step">
+      <div class="step-num" style="background:var(--orange)">1</div>
+      <div>
+        <h3>Créez votre compte</h3>
+        <p>Renseignez votre entreprise, votre métier et vos coordonnées. 2 minutes.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:var(--cyan)">2</div>
+      <div>
+        <h3>Ajoutez vos devis et chantiers</h3>
+        <p>Importez vos devis existants ou ajoutez-les manuellement. L'IA prend le relais.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:var(--green)">3</div>
+      <div>
+        <h3>L'IA travaille pour vous 24/7</h3>
+        <p>Relances, suivi, avis, impayés — tout part automatiquement par SMS, WhatsApp ou email.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="section-badge" style="color:#ffd740">Ils attendent PilotChantier</div>
+  <h2>Ce que disent les artisans</h2>
+  <div style="margin-top:20px">
+    <div class="testimonial">
+      <div class="quote">"Je perds au moins 2 chantiers par mois parce que j'oublie de relancer mes devis. Si un outil peut le faire à ma place, je signe tout de suite."</div>
+      <div class="author">
+        <div class="avatar">T</div>
+        <div><div class="name">Thierry M.</div><div class="role">Plombier — Lyon</div></div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <div class="quote">"Mes clients ne laissent jamais d'avis Google alors que 100% sont satisfaits. Je n'ose pas demander. Si c'est automatique, c'est parfait."</div>
+      <div class="author">
+        <div class="avatar">S</div>
+        <div><div class="name">Sandra L.</div><div class="role">Peintre en bâtiment — Bordeaux</div></div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <div class="quote">"J'ai 4 000€ d'impayés que je n'arrive pas à récupérer parce que je ne sais pas comment relancer proprement. J'ai besoin de ça."</div>
+      <div class="author">
+        <div class="avatar">K</div>
+        <div><div class="name">Karim B.</div><div class="role">Électricien — Marseille</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section">
+  <div class="pricing-box">
+    <div class="section-badge" style="color:var(--orange);margin-bottom:8px">Tarif de lancement</div>
+    <div class="amount">29€<span class="period">/mois</span></div>
+    <div class="old-price">Au lieu de 49€/mois — Tarif réservé aux premiers inscrits</div>
+    <div class="feature-list">
+      <div class="feature-item"><span class="check">✓</span> Relances devis illimitées</div>
+      <div class="feature-item"><span class="check">✓</span> Suivi chantier automatique</div>
+      <div class="feature-item"><span class="check">✓</span> Collecte d'avis Google</div>
+      <div class="feature-item"><span class="check">✓</span> Relances impayés</div>
+      <div class="feature-item"><span class="check">✓</span> SMS + WhatsApp + Email</div>
+      <div class="feature-item"><span class="check">✓</span> Support prioritaire</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" id="cta">
+  <div class="cta-box" id="cta-form">
+    <div class="cta-counter">🔥 47 artisans déjà inscrits</div>
+    <h2>Rejoignez la liste d'attente</h2>
+    <p class="sub">Accès prioritaire + 30 jours gratuits + tarif de lancement garanti à vie</p>
+    <form id="signup-form">
+      <input type="email" class="cta-input" id="email-input" placeholder="Votre adresse email" required>
+      <select class="cta-select" id="metier-select">
+        <option value="">Votre métier (optionnel)</option>
+        <option value="plombier">Plombier / Chauffagiste</option>
+        <option value="electricien">Électricien</option>
+        <option value="peintre">Peintre en bâtiment</option>
+        <option value="macon">Maçon</option>
+        <option value="menuisier">Menuisier / Charpentier</option>
+        <option value="carreleur">Carreleur</option>
+        <option value="couvreur">Couvreur</option>
+        <option value="plaquiste">Plaquiste</option>
+        <option value="autre">Autre métier du bâtiment</option>
+      </select>
+      <button type="submit" class="cta-btn">🚀 Réserver mon accès prioritaire</button>
+    </form>
+    <div class="cta-note">Pas de spam. On vous contacte uniquement quand c'est prêt.</div>
+  </div>
+
+  <div class="success-box" id="success-box">
+    <div class="big">🎉</div>
+    <h2>Bienvenue dans l'aventure !</h2>
+    <p>Vous êtes sur la liste d'attente. On vous prévient dès que PilotChantier est prêt — vous aurez un <strong style="color:var(--orange)">accès prioritaire + 30 jours gratuits</strong>.</p>
+  </div>
+</section>
+
+<footer>
+  <div style="margin-bottom:4px">🏗️ PilotChantier — L'IA qui gère votre administratif de chantier</div>
+  <div>© 2026 PilotChantier. Tous droits réservés.</div>
+</footer>
+
+<script>
+document.getElementById('signup-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = document.getElementById('email-input').value;
+  const metier = document.getElementById('metier-select').value;
+
+  // Send to Brevo
+  try {
+    await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': 'YOUR_BREVO_API_KEY'
+      },
+      body: JSON.stringify({
+        email: email,
+        listIds: [2],
+        attributes: { METIER: metier }
+      })
+    });
+  } catch(err) {
+    console.log('Brevo error:', err);
+  }
+
+  // Show success
+  document.getElementById('cta-form').style.display = 'none';
+  document.getElementById('success-box').classList.add('show');
+});
+</script>
+
+</body>
+</html>
