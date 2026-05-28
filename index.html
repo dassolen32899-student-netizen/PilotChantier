@@ -308,23 +308,23 @@ document.getElementById('signup-form').addEventListener('submit', async function
   e.preventDefault();
   const email = document.getElementById('email-input').value;
   const metier = document.getElementById('metier-select').value;
+  const date = new Date().toLocaleDateString('fr-FR');
 
-  // Send to Brevo
+  // Send to Google Sheets via Sheet.best
   try {
-    await fetch('https://api.brevo.com/v3/contacts', {
+    await fetch('https://api.sheetbest.com/sheets/1d2824c8-1d6a-412c-bdaf-249a31c50bc3', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'api-key': 'YOUR_BREVO_API_KEY'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        email: email,
-        listIds: [2],
-        attributes: { METIER: metier }
+        Email: email,
+        Metier: metier,
+        Date: date
       })
     });
   } catch(err) {
-    console.log('Brevo error:', err);
+    console.log('Sheet error:', err);
   }
 
   // Show success
